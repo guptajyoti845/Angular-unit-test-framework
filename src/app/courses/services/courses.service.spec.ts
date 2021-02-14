@@ -4,7 +4,6 @@ import {HttpClientTestingModule, HttpTestingController} from '@angular/common/ht
 import {COURSES, findLessonsForCourse} from '../../../../server/db-data';
 import {Course} from '../model/course';
 import {HttpErrorResponse} from '@angular/common/http';
-import {searchLessons} from '../../../../server/search-lessons.route';
 
 describe('CoursesServices', () => {
   let courseService: CoursesService;
@@ -12,20 +11,20 @@ describe('CoursesServices', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers:[
+      providers: [
         CoursesService
       ]
     });
     courseService = TestBed.get(CoursesService);
     httpTestingController = TestBed.get(HttpTestingController);
-  })
+  });
 
   it('should retrieve all courses', function () {
     courseService.findAllCourses().subscribe(courses => {
-        expect(courses).toBeTruthy('No Course returned');
-        expect(courses.length).toBe(12, 'Incorrect number of courses');
-        const course = courses.find(course => course.id == 12);
-        expect(course.titles.description).toBe('Angular Testing Course');
+      expect(courses).toBeTruthy('No Course returned');
+      expect(courses.length).toBe(12, 'Incorrect number of courses');
+      const course = courses.find(course => course.id == 12);
+      expect(course.titles.description).toBe('Angular Testing Course');
     });
 
     const req = httpTestingController.expectOne('/api/courses');
@@ -62,14 +61,14 @@ describe('CoursesServices', () => {
   it('should give error when save rquest fails', function () {
     const changes: Partial<Course> = {titles: {description: 'Testing Course'}};
     courseService.saveCourse(12, changes).subscribe(() =>
-      fail('the save operation should have failed')
-    ,(error: HttpErrorResponse) => {
-      expect(error.status).toBe(500);
-    });
+        fail('the save operation should have failed')
+      , (error: HttpErrorResponse) => {
+        expect(error.status).toBe(500);
+      });
 
     const req = httpTestingController.expectOne('/api/courses/12');
     expect(req.request.method).toBe('PUT');
-    req.flush('Save request Failed',{status: 500, statusText: 'Internal Server Error'});
+    req.flush('Save request Failed', {status: 500, statusText: 'Internal Server Error'});
 
   });
 
@@ -81,18 +80,18 @@ describe('CoursesServices', () => {
       });
     const req = httpTestingController.expectOne(req => req.url === '/api/lessons');
     expect(req.request.method).toEqual('GET');
-    expect(req.request.params.get("courseId")).toEqual('12');
-    expect(req.request.params.get("filter")).toEqual('');
-    expect(req.request.params.get("sortOrder")).toEqual('asc');
-    expect(req.request.params.get("pageNumber")).toEqual('0');
-    expect(req.request.params.get("pageSize")).toEqual('3');
+    expect(req.request.params.get('courseId')).toEqual('12');
+    expect(req.request.params.get('filter')).toEqual('');
+    expect(req.request.params.get('sortOrder')).toEqual('asc');
+    expect(req.request.params.get('pageNumber')).toEqual('0');
+    expect(req.request.params.get('pageSize')).toEqual('3');
     req.flush({
-      payload: findLessonsForCourse(12).slice(0,3)
-    })
+      payload: findLessonsForCourse(12).slice(0, 3)
+    });
   });
 
   afterEach(() => {
     httpTestingController.verify();
-  })
+  });
 
 });
