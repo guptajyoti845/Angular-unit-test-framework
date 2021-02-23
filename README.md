@@ -1,7 +1,4 @@
 
-## Angular Testing Course
-
-
 # Installation pre-requisites
 
 For running this project we need node and npm installed on our machine. These are some tutorials to install node in different operating systems:
